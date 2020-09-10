@@ -89,7 +89,7 @@ For example:
             return "Is Even";
         }
 
-        return "Is False";
+        return "Is Odd";
     }
 
     private bool IsEven(int value)
