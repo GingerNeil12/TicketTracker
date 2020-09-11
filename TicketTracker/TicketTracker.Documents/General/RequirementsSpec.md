@@ -147,6 +147,29 @@ The system needs to be able to interface with the following technologies:
 - AWS RDS/Sql Server instance
 - AWS S3 Bucket
 
+<br />
+
+# The Context Model
+
+## *Goal Statement*
+
+The goal of the system is to allow the user to easily track their tickets by:
+- allowing easily access to filter and searching results and adding new tickets
+- providing users with quick and easy to understand results
+
+## *System Externals*
+
+- Visitor
+  - A Visitor is anyone who has not logged into the site. They have access to all public parts of the site and can sign up for newsletters or anything else that gets implemented for marketing.
+- User
+  - A user is anyone who is authenticated by the site. As a base level a user can create a ticket and update it as needed
+- Project Manager
+  - A project manager is anyone who is in charge of a board or grouping of tickets. They will also be able to assign or direct users to work on specific tickets
+- Administrator
+  - An administrator is anyone who can manage the users of a given board. They can also run any reports required.
+
+
+
 
 
 
