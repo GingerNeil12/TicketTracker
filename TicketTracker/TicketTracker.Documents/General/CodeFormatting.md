@@ -23,7 +23,7 @@ The following code block will demonstrate the general idea that classes should t
             _logger = logger;
         }
 
-        // Public and Private properties next
+        // Public properties next
 
         public string UserName { get; set; }
 
