@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using TicketTracker.Application.Interfaces.Security;
 using TicketTracker.Application.Models.Security;
 using TicketTracker.Infrastructure.Security.Models;
@@ -29,7 +28,7 @@ namespace TicketTracker.Infrastructure.Security.Services
                 );
             }
 
-            if(await _userManager.IsLockedOutAsync(user))
+            if(await UserIsLockedOutAsync(user))
             {
                 return new AuthenticationResult
                 (
@@ -38,7 +37,7 @@ namespace TicketTracker.Infrastructure.Security.Services
                 );
             }
 
-            if(!await _userManager.CheckPasswordAsync(user, loginDto.Password))
+            if(await UserPasswordIncorrectAsync(user, loginDto.Password))
             {
                 return new AuthenticationResult
                 (
@@ -50,6 +49,20 @@ namespace TicketTracker.Infrastructure.Security.Services
             // Update user with new RefreshToken etc
 
             throw new NotImplementedException();
+        }
+
+        private Task<bool> UserIsLockedOutAsync(ApplicationUser user)
+        {
+            return _userManager.IsLockedOutAsync(user);
+        }
+
+        private async Task<bool> UserPasswordIncorrectAsync
+        (
+            ApplicationUser user,
+            string password
+        )
+        {
+            return !await _userManager.CheckPasswordAsync(user, password);
         }
 
         private async Task<IEnumerable<Claim>> GetClaimsFromUserAsync(ApplicationUser user)
