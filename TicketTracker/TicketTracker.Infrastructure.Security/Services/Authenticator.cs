@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using TicketTracker.Application.Interfaces.Security;
 using TicketTracker.Application.Models.Security;
+using TicketTracker.Infrastructure.Security.Interfaces;
 using TicketTracker.Infrastructure.Security.Models;
-using TicketTracker.Shared.General.Security;
 using TicketTracker.Shared.ViewModels.Security;
 
 namespace TicketTracker.Infrastructure.Security.Services
@@ -15,41 +12,61 @@ namespace TicketTracker.Infrastructure.Security.Services
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IExistingUser _existingUser;
+        private readonly ITokenGenerator _tokenGenerator;
+
+        public Authenticator
+        (
+            UserManager<ApplicationUser> userManager,
+            IExistingUser existingUser,
+            ITokenGenerator tokenGenerator
+        )
+        {
+            _userManager = userManager;
+            _existingUser = existingUser;
+            _tokenGenerator = tokenGenerator;
+        }
 
         public async Task<AuthenticationResult> AuthenticateUserAsync(LoginDto loginDto)
         {
             var user = await _userManager.FindByEmailAsync(loginDto.EmailAddress);
 
-            if(user == null)
+            if (user == null)
             {
                 return new AuthenticationResult
                 (
-                    AuthenticationCode.EmailOrPasswordIncorrect,
-                    ErrorMessages.EmailOrPasswordIncorrect
+                    code: AuthenticationCode.EmailOrPasswordIncorrect,
+                    message: ErrorMessages.EmailOrPasswordIncorrect
                 );
             }
 
-            if(await UserIsLockedOutAsync(user))
+            if (await UserIsLockedOutAsync(user))
             {
                 return new AuthenticationResult
                 (
-                    AuthenticationCode.Success,
-                    ErrorMessages.AccountLocked
+                    code: AuthenticationCode.Success,
+                    message: ErrorMessages.AccountLocked
                 );
             }
 
-            if(await UserPasswordIncorrectAsync(user, loginDto.Password))
+            if (await UserPasswordIncorrectAsync(user, loginDto.Password))
             {
                 return new AuthenticationResult
                 (
-                    AuthenticationCode.EmailOrPasswordIncorrect,
-                    ErrorMessages.EmailOrPasswordIncorrect
+                    code: AuthenticationCode.EmailOrPasswordIncorrect,
+                    message: ErrorMessages.EmailOrPasswordIncorrect
                 );
             }
 
             await _existingUser.AddRefreshTokenToUserAsync(user.Id);
 
-            throw new NotImplementedException();
+            return new AuthenticationResult
+            (
+                code: AuthenticationCode.Success,
+                message: _tokenGenerator.CreateToken
+                (
+                    await _existingUser.GetAccessClaimsForUserAsync(user.Id)
+                )
+            );
         }
 
         private Task<bool> UserIsLockedOutAsync(ApplicationUser user)
