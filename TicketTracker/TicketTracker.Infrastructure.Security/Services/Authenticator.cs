@@ -14,6 +14,7 @@ namespace TicketTracker.Infrastructure.Security.Services
     public class Authenticator : IAuthenticator
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IExistingUser _existingUser;
 
         public async Task<AuthenticationResult> AuthenticateUserAsync(LoginDto loginDto)
         {
@@ -46,7 +47,7 @@ namespace TicketTracker.Infrastructure.Security.Services
                 );
             }
 
-            // Update user with new RefreshToken etc
+            await _existingUser.AddRefreshTokenToUserAsync(user.Id);
 
             throw new NotImplementedException();
         }
@@ -63,23 +64,6 @@ namespace TicketTracker.Infrastructure.Security.Services
         )
         {
             return !await _userManager.CheckPasswordAsync(user, password);
-        }
-
-        private async Task<IEnumerable<Claim>> GetClaimsFromUserAsync(ApplicationUser user)
-        {
-            var result = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(TokenClaims.RefreshToken, user.RefreshToken)
-            };
-
-            var roles = await _userManager.GetRolesAsync(user);
-            foreach (var role in roles)
-            {
-                result.Add(new Claim(ClaimTypes.Role, role));
-            }
-            
-            return result;
         }
 
         private static class ErrorMessages
