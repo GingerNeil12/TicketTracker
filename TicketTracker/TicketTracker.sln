@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicketTracker.Shared", "Tic
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C90D1702-754E-4ABC-B821-B38A334A9C9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketTracker.Testing", "TicketTracker.Testing\TicketTracker.Testing.csproj", "{3FC90CF6-355F-4335-BDF2-5C811E5D94AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicketTracker.Testing", "TicketTracker.Testing\TicketTracker.Testing.csproj", "{3FC90CF6-355F-4335-BDF2-5C811E5D94AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketTracker.Testing.Security", "TicketTracker.Testing.Security\TicketTracker.Testing.Security.csproj", "{170FB397-CEF0-48BD-8F3C-8CC3B9F0A321}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,10 @@ Global
 		{3FC90CF6-355F-4335-BDF2-5C811E5D94AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FC90CF6-355F-4335-BDF2-5C811E5D94AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FC90CF6-355F-4335-BDF2-5C811E5D94AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{170FB397-CEF0-48BD-8F3C-8CC3B9F0A321}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{170FB397-CEF0-48BD-8F3C-8CC3B9F0A321}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{170FB397-CEF0-48BD-8F3C-8CC3B9F0A321}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{170FB397-CEF0-48BD-8F3C-8CC3B9F0A321}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -80,6 +86,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{A57CB16E-9487-436E-B1DD-B10C403DA0A0} = {8CC99BA1-C1DB-4AB5-99D6-036C633430BC}
 		{3FC90CF6-355F-4335-BDF2-5C811E5D94AD} = {C90D1702-754E-4ABC-B821-B38A334A9C9B}
+		{170FB397-CEF0-48BD-8F3C-8CC3B9F0A321} = {C90D1702-754E-4ABC-B821-B38A334A9C9B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2E4FD14A-839C-4610-B08B-E14E8F17C12B}
