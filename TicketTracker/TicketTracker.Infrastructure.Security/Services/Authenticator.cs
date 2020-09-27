@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using TicketTracker.Application.Interfaces.Security;
 using TicketTracker.Application.Models.Security;
@@ -21,9 +22,9 @@ namespace TicketTracker.Infrastructure.Security.Services
             ITokenGenerator tokenGenerator
         )
         {
-            _userManager = userManager;
-            _existingUser = existingUser;
-            _tokenGenerator = tokenGenerator;
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _existingUser = existingUser ?? throw new ArgumentNullException(nameof(existingUser));
+            _tokenGenerator = tokenGenerator ?? throw new ArgumentNullException(nameof(tokenGenerator));
         }
 
         public async Task<AuthenticationResult> AuthenticateUserAsync(LoginDto loginDto)
