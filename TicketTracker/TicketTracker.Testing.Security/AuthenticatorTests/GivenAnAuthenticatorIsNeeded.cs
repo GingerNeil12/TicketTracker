@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using TicketTracker.Application.Interfaces.Security;
@@ -13,12 +15,13 @@ namespace TicketTracker.Testing.Security.AuthenticatorTests
     public class GivenAnAuthenticatorIsNeeded : AuthenticationBaseTest
     {
         [TestMethod]
+        [TestCategory(TestCategories.Unit)]
         public void WhenConstructed_WithValidArguments_ConstructsProperly()
         {
             // Arrange
-            var userManager = CreateMockUserManager();
-            var existingUser = new Mock<IExistingUser>(MockBehavior.Strict).Object;
-            var tokenGenerator = new Mock<ITokenGenerator>(MockBehavior.Strict).Object;
+            var userManager = CreateMockUserManager().Object;
+            var existingUser = new Mock<IExistingUser>(MockBehavior.Default).Object;
+            var tokenGenerator = new Mock<ITokenGenerator>(MockBehavior.Default).Object;
 
             // Act
             var result = new Authenticator(userManager, existingUser, tokenGenerator);
@@ -26,6 +29,39 @@ namespace TicketTracker.Testing.Security.AuthenticatorTests
             // Assert
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(IAuthenticator));
+        }
+
+        [TestMethod]
+        [TestCategory(TestCategories.Unit)]
+        [DynamicData(nameof(GetNullArguments), DynamicDataSourceType.Method)]
+        public void WhenConstructed_WithNullArguments_ThrowsNullException
+        (
+            string expectedParamName,
+            UserManager<ApplicationUser> userManager,
+            IExistingUser existingUser,
+            ITokenGenerator tokenGenerator
+        )
+        {
+            // Arrange
+
+            // Act
+            Action test = () =>
+                new Authenticator(userManager, existingUser, tokenGenerator);
+
+            // Assert
+            var exception = Assert.ThrowsException<ArgumentNullException>(test);
+            Assert.AreEqual(expectedParamName, exception.ParamName);
+        }
+
+        private static IEnumerable<object[]> GetNullArguments()
+        {
+            var userManager = CreateMockUserManager().Object;
+            var existingUser = new Mock<IExistingUser>(MockBehavior.Default).Object;
+            var tokenGenerator = new Mock<ITokenGenerator>(MockBehavior.Default).Object;
+
+            yield return new object[] { nameof(userManager), null, existingUser, tokenGenerator };
+            yield return new object[] { nameof(existingUser), userManager, null, tokenGenerator };
+            yield return new object[] { nameof(tokenGenerator), userManager, existingUser, null };
         }
     }
 }

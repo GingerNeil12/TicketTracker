@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -11,18 +10,19 @@ namespace TicketTracker.Testing.Security.Common
     public abstract class AuthenticationBaseTest
     {
         // TODO: Clean this up.
-        protected UserManager<ApplicationUser> CreateMockUserManager()
+        protected static Mock<UserManager<ApplicationUser>> CreateMockUserManager()
         {
-            var userStore = new Mock<IUserStore<ApplicationUser>>(MockBehavior.Strict).Object;
-            var options = new Mock<IOptions<IdentityOptions>>(MockBehavior.Strict).Object;
-            var passwordHasher = new Mock<IPasswordHasher<ApplicationUser>>(MockBehavior.Strict).Object;
-            var userValidators = new Mock<IEnumerable<IUserValidator<ApplicationUser>>>(MockBehavior.Strict).Object;
-            var passwordValidators = new Mock<IEnumerable<IPasswordValidator<ApplicationUser>>>(MockBehavior.Strict).Object;
-            var errors = new Mock<IdentityErrorDescriber>(MockBehavior.Strict).Object;
-            var keyNormalizer = new Mock<ILookupNormalizer>(MockBehavior.Strict).Object;
-            var services = new Mock<IServiceProvider>(MockBehavior.Strict).Object;
-            var logger = new Mock<ILogger<UserManager<ApplicationUser>>>(MockBehavior.Strict).Object;
-            return new UserManager<ApplicationUser>
+            var userStore = new Mock<IUserStore<ApplicationUser>>().Object;
+            var options = new Mock<IOptions<IdentityOptions>>().Object;
+            var passwordHasher = new Mock<IPasswordHasher<ApplicationUser>>().Object;
+            var userValidators = new IUserValidator<ApplicationUser>[0];
+            var passwordValidators = new IPasswordValidator<ApplicationUser>[0];
+            var errors = new Mock<IdentityErrorDescriber>().Object;
+            var keyNormalizer = new Mock<ILookupNormalizer>().Object;
+            var services = new Mock<IServiceProvider>().Object;
+            var logger = new Mock<ILogger<UserManager<ApplicationUser>>>().Object;
+
+            return new Mock<UserManager<ApplicationUser>>
             (
                 userStore,
                 options,
