@@ -12,10 +12,10 @@ using TicketTracker.Testing.Security.Common;
 namespace TicketTracker.Testing.Security.AuthenticatorTests
 {
     [TestClass]
+    [TestCategory(TestCategories.Unit)]
     public class GivenAnAuthenticatorIsNeeded : AuthenticationBaseTest
     {
         [TestMethod]
-        [TestCategory(TestCategories.Unit)]
         public void WhenConstructed_WithValidArguments_ConstructsProperly()
         {
             // Arrange
@@ -32,7 +32,6 @@ namespace TicketTracker.Testing.Security.AuthenticatorTests
         }
 
         [TestMethod]
-        [TestCategory(TestCategories.Unit)]
         [DynamicData(nameof(GetNullArguments), DynamicDataSourceType.Method)]
         public void WhenConstructed_WithNullArguments_ThrowsNullException
         (
