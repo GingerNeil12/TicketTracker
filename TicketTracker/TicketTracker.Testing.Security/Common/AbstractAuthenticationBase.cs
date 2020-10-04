@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,6 +53,11 @@ namespace TicketTracker.Testing.Security.Common
         {
             var provider = GetServiceProvider();
             return (RoleManager<IdentityRole>)provider.GetRequiredService(typeof(RoleManager<IdentityRole>));
+        }
+
+        protected static JwtSecurityToken GetTokenObjectFromTokenString(string tokenString)
+        {
+            return new JwtSecurityToken(tokenString);
         }
 
         protected async Task CreateAdminAccount()

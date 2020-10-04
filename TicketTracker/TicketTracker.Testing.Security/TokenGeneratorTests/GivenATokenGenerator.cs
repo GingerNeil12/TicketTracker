@@ -15,7 +15,7 @@ namespace TicketTracker.Testing.Security.TokenGeneratorTests
 {
     [TestClass]
     [TestCategory(TestCategories.Unit)]
-    public class GivenATokenGenerator : AbstractConfigurationBase
+    public class GivenATokenGenerator : AbstractAuthenticationBase
     {
         private ITokenGenerator _tokenGenerator { get; set; }
         private ICurrentDateTime _currentDateTime { get; set; }
@@ -71,7 +71,7 @@ namespace TicketTracker.Testing.Security.TokenGeneratorTests
 
             // Act  
             var result = _tokenGenerator.CreateToken(claims);
-            var token = new JwtSecurityToken(result);
+            var token = GetTokenObjectFromTokenString(result);
 
             // Assert
             Assert.IsNotNull(result);
