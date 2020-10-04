@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,10 @@ namespace TicketTracker.Testing.Security.Common
 {
     public abstract class AbstractAuthenticationBase : AbstractConfigurationBase
     {
+        protected static string AdminUserEmail = "admin@email.com";
+        protected static string AdminPassword = "Password123!";
+        protected static string AdminRoleName = "Administrator";
+
         // TODO: Clean this up.
         protected static Mock<UserManager<ApplicationUser>> CreateMockUserManager()
         {
@@ -37,10 +42,35 @@ namespace TicketTracker.Testing.Security.Common
             );
         }
 
-        protected static UserManager<ApplicationUser> GetUserManager()
+        protected static UserManager<ApplicationUser> GetNonMockUserManager()
         {
             var provider = GetServiceProvider();
             return (UserManager<ApplicationUser>)provider.GetRequiredService(typeof(UserManager<ApplicationUser>));
+        }
+
+        protected static RoleManager<IdentityRole> GetNonMockRoleManager()
+        {
+            var provider = GetServiceProvider();
+            return (RoleManager<IdentityRole>)provider.GetRequiredService(typeof(RoleManager<IdentityRole>));
+        }
+
+        protected async Task CreateAdminAccount()
+        {
+            var user = new ApplicationUser()
+            {
+                Email = AdminUserEmail,
+                UserName = AdminPassword
+            };
+
+            var userManager = GetNonMockUserManager();
+            await userManager.CreateAsync(user, AdminPassword);
+
+            var roleManager = GetNonMockRoleManager();
+            var adminRole = new IdentityRole(AdminRoleName);
+            if(!await roleManager.RoleExistsAsync(AdminRoleName))
+            {
+                await roleManager.CreateAsync(adminRole);
+            }
         }
     }
 }
