@@ -44,7 +44,7 @@ namespace TicketTracker.Infrastructure.Security.Services
             {
                 return new AuthenticationResult
                 (
-                    code: AuthenticationCode.Success,
+                    code: AuthenticationCode.AccountLocked,
                     message: ErrorMessages.AccountLocked
                 );
             }
