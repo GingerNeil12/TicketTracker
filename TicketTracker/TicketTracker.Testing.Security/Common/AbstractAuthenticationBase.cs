@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -34,6 +35,12 @@ namespace TicketTracker.Testing.Security.Common
                 services,
                 logger
             );
+        }
+
+        protected static UserManager<ApplicationUser> GetUserManager()
+        {
+            var provider = GetServiceProvider();
+            return (UserManager<ApplicationUser>)provider.GetRequiredService(typeof(UserManager<ApplicationUser>));
         }
     }
 }
