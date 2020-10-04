@@ -7,7 +7,7 @@ using TicketTracker.Infrastructure.Security.Models;
 
 namespace TicketTracker.Testing.Security.Common
 {
-    public abstract class AuthenticationBaseTest
+    public abstract class AbstractAuthenticationBase : AbstractConfigurationBase
     {
         // TODO: Clean this up.
         protected static Mock<UserManager<ApplicationUser>> CreateMockUserManager()

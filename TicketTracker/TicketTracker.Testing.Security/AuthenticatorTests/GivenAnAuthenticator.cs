@@ -16,7 +16,7 @@ namespace TicketTracker.Testing.Security.AuthenticatorTests
 {
     [TestClass]
     [TestCategory(TestCategories.Unit)]
-    public class GivenAnAuthenticator : AuthenticationBaseTest
+    public class GivenAnAuthenticator : AbstractAuthenticationBase
     {
         private Mock<UserManager<ApplicationUser>> _userManagerMock { get; set; }
         private Mock<IExistingUser> _existingUserMock { get; set; }

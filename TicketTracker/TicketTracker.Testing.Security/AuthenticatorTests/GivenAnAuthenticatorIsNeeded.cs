@@ -13,7 +13,7 @@ namespace TicketTracker.Testing.Security.AuthenticatorTests
 {
     [TestClass]
     [TestCategory(TestCategories.Unit)]
-    public class GivenAnAuthenticatorIsNeeded : AuthenticationBaseTest
+    public class GivenAnAuthenticatorIsNeeded : AbstractAuthenticationBase
     {
         [TestMethod]
         public void WhenConstructed_WithValidArguments_ConstructsProperly()
