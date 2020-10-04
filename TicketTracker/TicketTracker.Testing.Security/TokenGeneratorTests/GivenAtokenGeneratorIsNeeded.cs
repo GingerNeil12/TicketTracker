@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TicketTracker.Testing.Security.Common;
 
 namespace TicketTracker.Testing.Security.TokenGeneratorTests
 {
     [TestClass]
-    public class GivenAtokenGeneratorIsNeeded
+    [TestCategory(TestCategories.Unit)]
+    public class GivenAtokenGeneratorIsNeeded : AbstractConfigurationBase
     {
+        [TestMethod]
+        public void WhenConstructed_WithValidArguments_ConstructsProperly()
+        {
+            var config = GetConfiguration();
+        }
     }
 }
