@@ -9,6 +9,7 @@ namespace TicketTracker.Infrastructure.Security
     {
         public static void AddSecurity(this IServiceCollection services)
         {
+            services.AddTransient<IExistingUser, ExistingUser>();
             services.AddTransient<ITokenGenerator, TokenGenerator>();
             services.AddTransient<IAuthenticator, Authenticator>();
         }
