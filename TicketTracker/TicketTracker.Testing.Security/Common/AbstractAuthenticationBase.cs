@@ -65,17 +65,23 @@ namespace TicketTracker.Testing.Security.Common
             var user = new ApplicationUser()
             {
                 Email = AdminUserEmail,
-                UserName = AdminPassword
+                UserName = AdminUserEmail
             };
 
             var userManager = GetNonMockUserManager();
             await userManager.CreateAsync(user, AdminPassword);
 
             var roleManager = GetNonMockRoleManager();
+            
             var adminRole = new IdentityRole(AdminRoleName);
             if(!await roleManager.RoleExistsAsync(AdminRoleName))
             {
                 await roleManager.CreateAsync(adminRole);
+            }
+
+            if(!await userManager.IsInRoleAsync(user, AdminRoleName))
+            {
+                await userManager.AddToRoleAsync(user, AdminRoleName);
             }
         }
     }
