@@ -26,6 +26,7 @@ namespace TicketTracker.Testing.Security.AuthenticatorTests.IntegrationTests
         public void TestInitialize()
         {
             CreateAdminAccount().Wait();
+            CreateStandardUserAccount().Wait();
             
             var currentDateTime = new CurrentDateTime();
             
@@ -89,6 +90,80 @@ namespace TicketTracker.Testing.Security.AuthenticatorTests.IntegrationTests
                 TotalAdminRoleCount,
                 token.Claims.Where(x => x.Type == ClaimTypes.Role).ToList().Count
             );
+
+            Assert.AreEqual
+            (
+                AdminRoleName,
+                token.Claims.Where(x => x.Type == ClaimTypes.Role).First().Value
+            );
+        }
+
+        [TestMethod]
+        public async Task WhenStandardCredentialsAreValid_ReturnsSuccessResponseAndAccessTokenAsync()
+        {
+            // Arrange
+            var loginDto = new LoginDto()
+            {
+                EmailAddress = StandardUserEmail,
+                Password = StandardPassword
+            };
+            var config = GetConfiguration();
+
+            // Act
+            var result = await _authenticator.AuthenticateUserAsync(loginDto);
+            var token = GetTokenObjectFromTokenString(result.Message);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Message);
+            Assert.AreEqual(AuthenticationCode.Success, result.Code);
+            Assert.AreEqual(config["JWT:Issuer"], token.Issuer);
+            Assert.AreEqual(config["JWT:Audience"], token.Audiences.First());
+            Assert.AreEqual(SecurityAlgorithms.HmacSha256, token.SignatureAlgorithm);
+            Assert.IsNotNull(token.Claims);
+
+            Assert.AreEqual
+            (
+                TotalNameIdentifierClaimCount,
+                token.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).ToList().Count
+            );
+
+            Assert.AreEqual
+            (
+                TotalRefreshTokenClaimCount,
+                token.Claims.Where(x => x.Type == "RefreshToken").ToList().Count
+            );
+
+            Assert.AreEqual
+            (
+                TotalAdminRoleCount,
+                token.Claims.Where(x => x.Type == ClaimTypes.Role).ToList().Count
+            );
+
+            Assert.AreEqual
+            (
+                StandardRoleName,
+                token.Claims.Where(x => x.Type == ClaimTypes.Role).First().Value
+            );
+        }
+
+        [TestMethod]
+        public async Task WhenAdminEmailIsValid_AndPasswordIsNot_ReturnsEmailOrPasswordIncorrectResponseAsync()
+        {
+            // Arrange
+            var loginDto = new LoginDto()
+            {
+                EmailAddress = AdminUserEmail,
+                Password = StandardPassword
+            };
+
+            // Act
+            var result = await _authenticator.AuthenticateUserAsync(loginDto);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(AuthenticationCode.EmailOrPasswordIncorrect, result.Code);
+            Assert.AreEqual("Email or Password is incorrect.", result.Message);
         }
     }
 }

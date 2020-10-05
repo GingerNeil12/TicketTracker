@@ -15,6 +15,9 @@ namespace TicketTracker.Testing.Security.Common
         protected static string AdminUserEmail = "admin@email.com";
         protected static string AdminPassword = "Password123!";
         protected static string AdminRoleName = "Administrator";
+        protected static string StandardUserEmail = "user@email.com";
+        protected static string StandardPassword = "Password!123";
+        protected static string StandardRoleName = "User";
 
         // TODO: Clean this up.
         protected static Mock<UserManager<ApplicationUser>> CreateMockUserManager()
@@ -82,6 +85,31 @@ namespace TicketTracker.Testing.Security.Common
             if(!await userManager.IsInRoleAsync(user, AdminRoleName))
             {
                 await userManager.AddToRoleAsync(user, AdminRoleName);
+            }
+        }
+
+        protected async Task CreateStandardUserAccount()
+        {
+            var user = new ApplicationUser()
+            {
+                Email = StandardUserEmail,
+                UserName = StandardUserEmail
+            };
+
+            var userManager = GetNonMockUserManager();
+            await userManager.CreateAsync(user, StandardPassword);
+
+            var roleManager = GetNonMockRoleManager();
+
+            var standardRole = new IdentityRole(StandardRoleName);
+            if (!await roleManager.RoleExistsAsync(StandardRoleName))
+            {
+                await roleManager.CreateAsync(standardRole);
+            }
+
+            if (!await userManager.IsInRoleAsync(user, StandardRoleName))
+            {
+                await userManager.AddToRoleAsync(user, StandardRoleName);
             }
         }
     }
